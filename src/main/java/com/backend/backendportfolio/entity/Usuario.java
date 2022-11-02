@@ -1,13 +1,24 @@
 package com.backend.backendportfolio.entity;
 
+
 import java.sql.Date;
+import java.util.HashSet;
+import java.util.Set;
+
 import javax.persistence.*;
 
+
+
 @Entity
+@Table(	name = "usuario", 
+uniqueConstraints = { 
+	@UniqueConstraint(columnNames = "username"),
+	@UniqueConstraint(columnNames = "mail") 
+})
 public class Usuario {
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Integer id;
+	private Long id;
 	private String nombre;
 	private String apellido;
 	private String descripcion;
@@ -23,16 +34,28 @@ public class Usuario {
 	private String linkedin;
 	private String github;
 	private String otro;
+	private String username;
 	
+	@ManyToMany(fetch = FetchType.LAZY)
+	@JoinTable(	name = "user_roles", 
+				joinColumns = @JoinColumn(name = "user_id"), 
+				inverseJoinColumns = @JoinColumn(name = "role_id"))
+	private Set<Role> roles = new HashSet<>();
+
 	public Usuario() {
-		// TODO Auto-generated constructor stub
+	}
+	
+	public Usuario(String username, String mail, String password) {
+		this.username = username;
+		this.mail = mail;
+		this.password = password;
 	}
 
-	public Integer getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(Integer id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 
@@ -155,8 +178,47 @@ public class Usuario {
 	public void setOtro(String otro) {
 		this.otro = otro;
 	}
-	
-	
-	
 
+	public String getUsername() {
+		return username;
+	}
+
+	public void setUsername(String username) {
+		this.username = username;
+	}
+
+	public Set<Role> getRoles() {
+		return roles;
+	}
+
+	public void setRoles(Set<Role> roles) {
+		this.roles = roles;
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
